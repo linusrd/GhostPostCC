@@ -20,5 +20,13 @@ def inference_endpoint():
     result = mode.inference(fuel_sources, inference_timestamp)
     return jsonify(result)
 
+@app.route('/train', methods=['POST'])
+def train_endpoint():
+    data = request.json
+    fuel_sources = data['fuel_sources']
+
+    result = mode.forecast_all_fuel_sources(fuel_sources)
+    return jsonify(result)
+
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
