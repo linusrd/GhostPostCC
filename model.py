@@ -406,7 +406,7 @@ class ANNModel():
 
             # Get data minimum last_date, max last_date + 24 hours of data
             last_future_date = (pd.to_datetime(nearest_lower_timestamp) + pd.Timedelta(hours=24)).strftime("%Y-%m-%d %H:%M:%S")
-            future = dataset.loc[dataset.index <= last_future_date].tail(24)
+            future = dataset.loc[dataset.index <= last_future_date].tail(25)
 
             trainDates = dateTime[: -(NUM_TEST_DAYS*24)]
             fullTrainDates = np.copy(trainDates)
