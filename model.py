@@ -31,18 +31,6 @@ class ANNModel():
         self.PREDICTION_WINDOW_HOURS = 24
         self.MODEL_SLIDING_WINDOW_LEN = 24
 
-        COAL = 1
-        NAT_GAS = 2
-        NUCLEAR = 3
-        OIL = 4
-        HYDRO = 5
-        SOLAR = 6
-        WIND = 7
-        OTHERS = 8
-
-        self.FUEL = {COAL: "coal", NAT_GAS: "nat_gas", NUCLEAR: "nuclear", OIL: "oil", HYDRO: "hydro", SOLAR: "solar", WIND: "wind", OTHERS: "others"}
-        self.SOURCE_TO_SOURCE_COL_MAP = {y: x for x, y in self.FUEL.items()}
-
         self.CARBON_INTENSITY_COLUMN = 1
         self.carbonRateDirect = {"avg_coal_production_forecast": 1003.7, "avg_biomass_production_forecast": 0, 
                         "avg_nat_gas_production_forecast": 409.43, "avg_geothermal_production_forecast": 0, 
@@ -181,14 +169,14 @@ class ANNModel():
 
     def forecast_all_fuel_sources(self, fuel_sources):
         for source in fuel_sources:
-            IN_FILE_NAME = "data/MW_electricity_cleaned.csv"
+            IN_FILE_NAME = f"data/data_cleaned_{source}.csv"
 
             OUT_FILE_NAME_PREFIX = 'data/src_prod_forecast'
             OUT_FILE_NAME = OUT_FILE_NAME_PREFIX + "_" + source + ".csv"
             OUT_MODEL_NAME = 'model/' + source + "_ann.keras"
 
-            SOURCE_COL = self.SOURCE_TO_SOURCE_COL_MAP[source]
-            NUM_FEATURES = self.NUM_FEATURES_DICT[self.FUEL[SOURCE_COL]]
+            SOURCE_COL = 0
+            NUM_FEATURES = self.NUM_FEATURES_DICT[source]
 
             dataset, dateTime = self.initDataset(IN_FILE_NAME, SOURCE_COL)
 
@@ -368,7 +356,7 @@ class ANNModel():
     def inference(self, fuel_sources, inference_timestamp):
         combined_data = pd.DataFrame(columns=["timestamp"])
         for source in fuel_sources:
-            IN_FILE_NAME = "data/MW_electricity_cleaned.csv"
+            IN_FILE_NAME = f"data/data_cleaned_{source}.csv"
             IN_MODEL_NAME = 'model/' + source + "_ann.keras"
 
             NUM_FEATURES_DICT = {"coal": 6, "nat_gas": 6, "nuclear": 6, "oil": 6, "hydro": 6, "solar": 6,
@@ -380,20 +368,8 @@ class ANNModel():
             PREDICTION_WINDOW_HOURS = 24
             MODEL_SLIDING_WINDOW_LEN = 24
 
-            COAL = 1
-            NAT_GAS = 2
-            NUCLEAR = 3
-            OIL = 4
-            HYDRO = 5
-            SOLAR = 6
-            WIND = 7
-            OTHERS = 8
-
-            FUEL = {COAL: "coal", NAT_GAS: "nat_gas", NUCLEAR: "nuclear", OIL: "oil", HYDRO: "hydro", SOLAR: "solar", WIND: "wind", OTHERS: "others"}
-            SOURCE_TO_SOURCE_COL_MAP = {y: x for x, y in FUEL.items()}
-
-            SOURCE_COL = SOURCE_TO_SOURCE_COL_MAP[source]
-            NUM_FEATURES = NUM_FEATURES_DICT[FUEL[SOURCE_COL]]
+            SOURCE_COL = 0
+            NUM_FEATURES = NUM_FEATURES_DICT[source]
 
             print("initializing dataset...")
             
